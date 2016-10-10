@@ -10,6 +10,10 @@ var compareDiffs = function(a, b){
   var immutableDiffResult = diff(Immutable.fromJS(a), Immutable.fromJS(b));
 
   if (!Immutable.is(jsonDiffResult, immutableDiffResult)) {
+    // jsonDiff doesn't provide oldValue
+    // so make sure the only differences between the diffs is the addition
+    // of 'oldValue' fields, and trust the rest of the test suite to verify
+    // that the correct oldValue values are present.
     const diffDiff = diff(jsonDiffResult, immutableDiffResult);
     diffDiff.forEach(op => {
       if (op.get('op') !== 'add' ||

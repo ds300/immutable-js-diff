@@ -33,7 +33,7 @@ var mapDiff = function(a, b, p){
           var bValue = b.get ? b.get(aKey) : b;
           var areDifferentValues = (aValue !== bValue);
           if (areDifferentValues) {
-            ops.push(op('replace', concatPath(path, escape(aKey)), bValue));
+            ops.push(op('replace', concatPath(path, escape(aKey)), bValue, aValue));
           }
         }
       }
@@ -46,7 +46,7 @@ var mapDiff = function(a, b, p){
         else{
           ops.push( op('remove', concatPath(path, escape(aKey))) );
         }
-        
+
       }
     });
   }
@@ -78,7 +78,7 @@ var sequenceDiff = function (a, b, p) {
         ops = ops.concat(mapDiffs);
       }
       else{
-        ops.push(op('replace', concatPath(path, pathIndex), diff.newVal));
+        ops.push(op('replace', concatPath(path, pathIndex), diff.newVal, diff.val));
       }
       pathIndex++;
     }
@@ -96,13 +96,13 @@ var primitiveTypeDiff = function (a, b, p) {
   var path = p || '';
   if(a === b){ return []; }
   else{
-    return [ op('replace', concatPath(path, ''), b) ];
+    return [ op('replace', concatPath(path, ''), b, a) ];
   }
 };
 
 var diff = function(a, b, p){
   if(Immutable.is(a, b)){ return Immutable.List(); }
-  if(a != b && (a == null || b == null)){ return Immutable.fromJS([op('replace', '/', b)]); }
+  if(a != b && (a == null || b == null)){ return Immutable.fromJS([op('replace', '/', b, a)]); }
   if(isIndexed(a) && isIndexed(b)){
     return Immutable.fromJS(sequenceDiff(a, b));
   }

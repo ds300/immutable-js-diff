@@ -68,8 +68,8 @@ describe('Sequence diff', function() {
 
     var result = diff(list1, list2);
     var expected = Immutable.fromJS([
-      {op: 'replace', path: '/2', value: 4},
-      {op: 'replace', path: '/3', value: 5}
+      {op: 'replace', path: '/2', value: 4, oldValue: 3},
+      {op: 'replace', path: '/3', value: 5, oldValue: 4}
     ]);
 
     assert.ok(Immutable.is(result, expected));
@@ -91,11 +91,11 @@ describe('Sequence diff', function() {
     var list2 = Immutable.Range(1, 900).concat(Immutable.Range(950, 955));
 
     var expected = Immutable.List([
-      Immutable.Map({ op: "replace", path: "/899", value: 950 }),
-      Immutable.Map({ op: "replace", path: "/900", value: 951 }),
-      Immutable.Map({ op: "replace", path: "/901", value: 952 }),
-      Immutable.Map({ op: "replace", path: "/902", value: 953 }),
-      Immutable.Map({ op: "replace", path: "/903", value: 954 })
+      Immutable.Map({ op: "replace", path: "/899", value: 950, oldValue: 900 }),
+      Immutable.Map({ op: "replace", path: "/900", value: 951, oldValue: 901 }),
+      Immutable.Map({ op: "replace", path: "/901", value: 952, oldValue: 902 }),
+      Immutable.Map({ op: "replace", path: "/902", value: 953, oldValue: 903 }),
+      Immutable.Map({ op: "replace", path: "/903", value: 954, oldValue: 904 })
     ]).concat(Immutable.Repeat(Immutable.Map({ op: 'remove', path: '/904' }), 95));
 
     console.log(result);
@@ -173,7 +173,7 @@ describe('Sequence diff', function() {
 
         var result = diff(list1, modifiedList);
         var expected = Immutable.fromJS([
-          {op: 'replace', path: '/'+replaceIdx, value: newValue}
+          {op: 'replace', path: '/'+replaceIdx, value: newValue, oldValue: array[replaceIdx]}
         ]);
 
         return veredict(Immutable.is(result, expected));
@@ -217,7 +217,7 @@ describe('Sequence diff', function() {
 
         var result = diff(list1, modifiedList);
         var expected = Immutable.fromJS([
-          {op: 'replace', path: '/'+idx, value: newValue}
+          {op: 'replace', path: '/'+idx, value: newValue, oldValue: array[idx]}
         ]);
 
         return veredict(Immutable.is(result, expected));
@@ -235,7 +235,7 @@ describe('Sequence diff', function() {
 
     setDiff = diff(Immutable.Set([1]), Immutable.Set([1,2,3]));
     var expected = Immutable.fromJS([
-      {op: 'replace', path: '/', value: Immutable.Set([1,2,3])}
+      {op: 'replace', path: '/', value: Immutable.Set([1,2,3]), oldValue: Immutable.Set([1])}
     ]);
 
     assert.ok(Immutable.is(setDiff, expected));

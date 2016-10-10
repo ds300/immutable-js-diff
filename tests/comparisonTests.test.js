@@ -9,7 +9,16 @@ var compareDiffs = function(a, b){
   var jsonDiffResult = Immutable.fromJS(jsonDiff.diff(a, b));
   var immutableDiffResult = diff(Immutable.fromJS(a), Immutable.fromJS(b));
 
-  assert.ok(Immutable.is(jsonDiffResult, immutableDiffResult));
+  if (!Immutable.is(jsonDiffResult, immutableDiffResult)) {
+    const diffDiff = diff(jsonDiffResult, immutableDiffResult);
+    diffDiff.forEach(op => {
+      if (op.get('op') !== 'add' ||
+          op.get('path').split('/').pop() !== 'oldValue') {
+        assert.ok(false);
+      }
+    })
+  }
+  assert.ok(true);
 };
 
 describe('Comparison Tests', function() {
@@ -33,11 +42,11 @@ describe('Comparison Tests', function() {
     compareDiffs([2, 3], [1, 2, 3]);
     compareDiffs([1, 3], [1, 2, 3]);
     compareDiffs([1, 2], [1, 2, 3]);
-    compareDiffs([1, 2, 3], [1, 4, 3]); 
+    compareDiffs([1, 2, 3], [1, 4, 3]);
 
     compareDiffs({a: [9, 8, 7], b: 2, c: 3}, {a: [9, 7], b: 2, c: 4, d: 5});
 
-    compareDiffs([1, 0, 0], [1, 1, 0]); 
+    compareDiffs([1, 0, 0], [1, 1, 0]);
     compareDiffs([1, 1, 0], [1, 0, 0]);
 
     compareDiffs({foo: 'bar'}, {baz: 'qux', foo: 'bar'});
@@ -48,6 +57,6 @@ describe('Comparison Tests', function() {
     compareDiffs({foo: 'bar'}, {foo: 'bar', child: {grandchild: {}}});
     compareDiffs({foo: ['bar']}, {foo: ['bar', ['abc', 'def']]});
 
-    compareDiffs([0, 0], [1, 1]); 
+    compareDiffs([0, 0], [1, 1]);
   });
 });

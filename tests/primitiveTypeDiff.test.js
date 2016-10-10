@@ -44,7 +44,7 @@ describe('Primitive types diff', function() {
       function(veredict, int1, int2){
         var result = diff(int1, int2);
         var expected = Immutable.fromJS([
-          {op: 'replace', path: '/', value: int2}
+          {op: 'replace', path: '/', value: int2, oldValue: int1}
         ]);
 
         return veredict(Immutable.is(result, expected));
@@ -60,7 +60,7 @@ describe('Primitive types diff', function() {
       function(veredict, str1, str2){
         var result = diff(str1, str2);
         var expected = Immutable.fromJS([
-          {op: 'replace', path: '/', value: str2}
+          {op: 'replace', path: '/', value: str2, oldValue: str1}
         ]);
 
         return veredict(Immutable.is(result, expected));
@@ -76,7 +76,7 @@ describe('Primitive types diff', function() {
       function(veredict, array1, array2){
         var result = diff(array1, array2);
         var expected = Immutable.fromJS([
-          {op: 'replace', path: '/', value: array2}
+          {op: 'replace', path: '/', value: array2, oldValue: array1}
         ]);
 
         return veredict(Immutable.is(result, expected));
@@ -92,7 +92,7 @@ describe('Primitive types diff', function() {
       function(veredict, object1, object2){
         var result = diff(object1, object2);
         var expected = Immutable.fromJS([
-          {op: 'replace', path: '/', value: object2}
+          {op: 'replace', path: '/', value: object2, oldValue: object1}
         ]);
 
         return veredict(Immutable.is(result, expected));
